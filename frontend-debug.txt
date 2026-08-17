@@ -1,0 +1,712 @@
+===== APP.JSX =====
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import Dashboard from "./pages/Dashboard";
+import Investigation from "./pages/Investigation";
+import Sidebar from "./components/Sidebar";
+
+function App() {
+    return (
+        <BrowserRouter>
+            <div className="app-layout">
+
+                <Sidebar />
+
+                <main className="main-content">
+                    <Routes>
+                        <Route path="/" element={<Dashboard />} />
+                        <Route
+                            path="/investigation"
+                            element={<Investigation />}
+                        />
+                    </Routes>
+                </main>
+
+            </div>
+        </BrowserRouter>
+    );
+}
+
+export default App;
+===== MAIN.JSX =====
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import './index.css'
+import App from './App.jsx'
+
+createRoot(document.getElementById('root')).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+)
+===== PACKAGE.JSON =====
+{
+  "name": "frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "axios": "^1.19.0",
+    "cytoscape": "^3.34.0",
+    "react": "^19.2.8",
+    "react-cytoscapejs": "^2.0.0",
+    "react-dom": "^19.2.8",
+    "react-icons": "^5.7.0",
+    "react-router-dom": "^7.18.2",
+    "reactflow": "^11.11.4",
+    "recharts": "^3.10.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.4",
+    "eslint": "^10.8.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.3",
+    "globals": "^17.7.0",
+    "vite": "^8.2.0"
+  }
+}
+===== DASHBOARD.JSX =====
+import { useState } from "react";
+
+import Navbar from "../components/Navbar";
+import RepositoryUploader from "../components/RepositoryUploader";
+
+
+function Dashboard() {
+
+    const [targetName, setTargetName] = useState("");
+    const [targetUrl, setTargetUrl] = useState("");
+    const [targetScope, setTargetScope] = useState("");
+
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+
+
+    const handleTargetAnalyze = async () => {
+
+        setError("");
+
+        if (!targetUrl.trim()) {
+            setError("Target URL is required.");
+            return;
+        }
+
+        setLoading(true);
+
+        try {
+
+            const response = await fetch(
+                "http://localhost:8000/target/context",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+
+                    body: JSON.stringify({
+                        name:
+                            targetName.trim() ||
+                            targetUrl.trim(),
+
+                        base_url:
+                            targetUrl.trim(),
+
+                        scope:
+                            targetScope.trim()
+                                ? [targetScope.trim()]
+                                : [],
+
+                        source: "authorized_target",
+                    }),
+                }
+            );
+
+
+            if (!response.ok) {
+
+                let message =
+                    "Unable to validate target.";
+
+                try {
+                    const data = await response.json();
+
+                    if (data?.detail) {
+                        message = data.detail;
+                    }
+                } catch {
+                    // Keep default error message
+                }
+
+                throw new Error(message);
+            }
+
+
+            const target = await response.json();
+
+
+            /*
+             * Persist the validated target.
+             * Investigation page will consume this context.
+             */
+
+            localStorage.setItem(
+                "bughunter_target",
+                JSON.stringify(target)
+            );
+
+
+            /*
+             * Move into the investigation workspace.
+             */
+
+            window.location.href =
+                "/investigation";
+
+
+        } catch (err) {
+
+            console.error(
+                "Target initialization failed:",
+                err
+            );
+
+            setError(
+                err?.message ||
+                "Unable to initialize investigation."
+            );
+
+        } finally {
+
+            setLoading(false);
+
+        }
+    };
+
+
+    const clearTarget = () => {
+
+        setTargetName("");
+        setTargetUrl("");
+        setTargetScope("");
+        setError("");
+
+    };
+
+
+    return (
+
+        <div
+            style={{
+                display: "flex",
+                minHeight: "100vh",
+                width: "100%",
+                background: "#07111f",
+            }}
+        >
+
+            <div
+                style={{
+                    flex: 1,
+                    minWidth: 0,
+                }}
+            >
+
+                <Navbar />
+
+
+                <main
+                    style={{
+                        padding: "32px",
+                        maxWidth: "1200px",
+                        margin: "0 auto",
+                    }}
+                >
+
+                    {/* =====================================================
+                        NEW SECURITY INVESTIGATION
+                    ====================================================== */}
+
+                    <section
+                        style={{
+                            background:
+                                "linear-gradient(145deg, #111c2d, #0b1422)",
+                            border:
+                                "1px solid rgba(0, 191, 255, 0.18)",
+                            borderRadius: "14px",
+                            padding: "28px",
+                            marginBottom: "28px",
+                            boxShadow:
+                                "0 12px 40px rgba(0, 0, 0, 0.25)",
+                        }}
+                    >
+
+                        <div
+                            style={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "flex-start",
+                                gap: "20px",
+                                marginBottom: "26px",
+                            }}
+                        >
+
+                            <div>
+
+                                <div
+                                    style={{
+                                        fontSize: "11px",
+                                        letterSpacing: "2px",
+                                        color: "#20cfff",
+                                        fontWeight: 700,
+                                        marginBottom: "8px",
+                                    }}
+                                >
+                                    SECURITY TARGET
+                                </div>
+
+
+                                <h1
+                                    style={{
+                                        margin: 0,
+                                        color: "#f5f7fa",
+                                        fontSize: "26px",
+                                        fontWeight: 700,
+                                    }}
+                                >
+                                    New Investigation
+                                </h1>
+
+
+                                <p
+                                    style={{
+                                        margin:
+                                            "8px 0 0",
+                                        color: "#71839b",
+                                        fontSize: "14px",
+                                    }}
+                                >
+                                    Define an authorized application
+                                    target before starting security
+                                    reasoning.
+                                </p>
+
+                            </div>
+
+
+                            <div
+                                style={{
+                                    border:
+                                        "1px solid rgba(34, 197, 94, 0.35)",
+                                    color: "#22c55e",
+                                    background:
+                                        "rgba(34, 197, 94, 0.06)",
+                                    borderRadius: "6px",
+                                    padding:
+                                        "7px 12px",
+                                    fontSize: "11px",
+                                    fontWeight: 700,
+                                    letterSpacing: "1px",
+                                    whiteSpace:
+                                        "nowrap",
+                                }}
+                            >
+                                READY
+                            </div>
+
+                        </div>
+
+
+                        {/* =================================================
+                            TARGET FORM
+                        ================================================== */}
+
+                        <div
+                            style={{
+                                display: "grid",
+                                gridTemplateColumns:
+                                    "1fr 1.5fr",
+                                gap: "20px",
+                            }}
+                        >
+
+                            {/* TARGET NAME */}
+
+                            <div>
+
+                                <label
+                                    style={{
+                                        display:
+                                            "block",
+                                        color: "#9aacbf",
+                                        fontSize: "12px",
+                                        fontWeight: 600,
+                                        marginBottom:
+                                            "8px",
+                                    }}
+                                >
+                                    Target Name
+                                </label>
+
+
+                                <input
+                                    type="text"
+                                    value={targetName}
+                                    onChange={(e) =>
+                                        setTargetName(
+                                            e.target.value
+                                        )
+                                    }
+                                    placeholder="e.g. Acme Web Application"
+                                    style={{
+                                        width: "100%",
+                                        boxSizing:
+                                            "border-box",
+                                        padding:
+                                            "13px 14px",
+                                        borderRadius:
+                                            "7px",
+                                        border:
+                                            "1px solid #24364d",
+                                        background:
+                                            "#091423",
+                                        color:
+                                            "#f5f7fa",
+                                        outline: "none",
+                                        fontSize:
+                                            "14px",
+                                    }}
+                                />
+
+                            </div>
+
+
+                            {/* BASE URL */}
+
+                            <div>
+
+                                <label
+                                    style={{
+                                        display:
+                                            "block",
+                                        color: "#9aacbf",
+                                        fontSize: "12px",
+                                        fontWeight: 600,
+                                        marginBottom:
+                                            "8px",
+                                    }}
+                                >
+                                    Base URL
+                                </label>
+
+
+                                <input
+                                    type="text"
+                                    value={targetUrl}
+                                    onChange={(e) =>
+                                        setTargetUrl(
+                                            e.target.value
+                                        )
+                                    }
+                                    placeholder="https://target.example.com"
+                                    style={{
+                                        width: "100%",
+                                        boxSizing:
+                                            "border-box",
+                                        padding:
+                                            "13px 14px",
+                                        borderRadius:
+                                            "7px",
+                                        border:
+                                            "1px solid #24364d",
+                                        background:
+                                            "#091423",
+                                        color:
+                                            "#f5f7fa",
+                                        outline: "none",
+                                        fontSize:
+                                            "14px",
+                                    }}
+                                />
+
+                            </div>
+
+
+                            {/* AUTHORIZED SCOPE */}
+
+                            <div
+                                style={{
+                                    gridColumn:
+                                        "1 / -1",
+                                }}
+                            >
+
+                                <label
+                                    style={{
+                                        display:
+                                            "block",
+                                        color: "#9aacbf",
+                                        fontSize: "12px",
+                                        fontWeight: 600,
+                                        marginBottom:
+                                            "8px",
+                                    }}
+                                >
+                                    Authorized Scope
+                                </label>
+
+
+                                <input
+                                    type="text"
+                                    value={targetScope}
+                                    onChange={(e) =>
+                                        setTargetScope(
+                                            e.target.value
+                                        )
+                                    }
+                                    placeholder="https://target.example.com/*"
+                                    style={{
+                                        width: "100%",
+                                        boxSizing:
+                                            "border-box",
+                                        padding:
+                                            "13px 14px",
+                                        borderRadius:
+                                            "7px",
+                                        border:
+                                            "1px solid #24364d",
+                                        background:
+                                            "#091423",
+                                        color:
+                                            "#f5f7fa",
+                                        outline: "none",
+                                        fontSize:
+                                            "14px",
+                                    }}
+                                />
+
+
+                                <div
+                                    style={{
+                                        marginTop:
+                                            "7px",
+                                        color:
+                                            "#596c83",
+                                        fontSize:
+                                            "11px",
+                                    }}
+                                >
+                                    Only test assets you are
+                                    explicitly authorized to assess.
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        {/* =================================================
+                            ERROR
+                        ================================================== */}
+
+                        {error && (
+
+                            <div
+                                style={{
+                                    marginTop:
+                                        "18px",
+                                    padding:
+                                        "11px 14px",
+                                    borderRadius:
+                                        "6px",
+                                    border:
+                                        "1px solid rgba(239, 68, 68, 0.35)",
+                                    background:
+                                        "rgba(239, 68, 68, 0.07)",
+                                    color:
+                                        "#f87171",
+                                    fontSize:
+                                        "13px",
+                                }}
+                            >
+                                {error}
+                            </div>
+
+                        )}
+
+
+                        {/* =================================================
+                            ACTIONS
+                        ================================================== */}
+
+                        <div
+                            style={{
+                                display: "flex",
+                                justifyContent:
+                                    "flex-end",
+                                gap: "10px",
+                                marginTop:
+                                    "24px",
+                            }}
+                        >
+
+                            <button
+                                type="button"
+                                onClick={clearTarget}
+                                disabled={loading}
+                                style={{
+                                    padding:
+                                        "11px 18px",
+                                    borderRadius:
+                                        "6px",
+                                    border:
+                                        "1px solid #2a3b51",
+                                    background:
+                                        "transparent",
+                                    color:
+                                        "#8ea1b8",
+                                    cursor:
+                                        loading
+                                            ? "not-allowed"
+                                            : "pointer",
+                                    fontWeight: 600,
+                                }}
+                            >
+                                Clear
+                            </button>
+
+
+                            <button
+                                type="button"
+                                onClick={
+                                    handleTargetAnalyze
+                                }
+                                disabled={
+                                    loading ||
+                                    !targetUrl.trim()
+                                }
+                                style={{
+                                    padding:
+                                        "11px 22px",
+                                    borderRadius:
+                                        "6px",
+                                    border:
+                                        "1px solid #0891b2",
+                                    background:
+                                        loading
+                                            ? "#164154"
+                                            : "#087f9b",
+                                    color: "#ffffff",
+                                    cursor:
+                                        loading ||
+                                        !targetUrl.trim()
+                                            ? "not-allowed"
+                                            : "pointer",
+                                    fontWeight: 700,
+                                    minWidth:
+                                        "175px",
+                                }}
+                            >
+                                {loading
+                                    ? "Initializing..."
+                                    : "Start Investigation"}
+                            </button>
+
+                        </div>
+
+                    </section>
+
+
+                    {/* =====================================================
+                        SOURCE CODE ANALYSIS
+                    ====================================================== */}
+
+                    <section
+                        style={{
+                            background:
+                                "rgba(12, 23, 38, 0.72)",
+                            border:
+                                "1px solid rgba(148, 163, 184, 0.10)",
+                            borderRadius: "14px",
+                            padding: "24px",
+                        }}
+                    >
+
+                        <div
+                            style={{
+                                marginBottom:
+                                    "18px",
+                            }}
+                        >
+
+                            <div
+                                style={{
+                                    fontSize:
+                                        "11px",
+                                    letterSpacing:
+                                        "1.8px",
+                                    color:
+                                        "#60748b",
+                                    fontWeight:
+                                        700,
+                                }}
+                            >
+                                APPLICATION MODEL
+                            </div>
+
+
+                            <h2
+                                style={{
+                                    margin:
+                                        "7px 0 5px",
+                                    color:
+                                        "#e7edf5",
+                                    fontSize:
+                                        "20px",
+                                }}
+                            >
+                                Repository Analysis
+                            </h2>
+
+
+                            <p
+                                style={{
+                                    margin: 0,
+                                    color:
+                                        "#657991",
+                                    fontSize:
+                                        "13px",
+                                }}
+                            >
+                                Analyze source code to reconstruct
+                                the application's internal model.
+                            </p>
+
+                        </div>
+
+
+                        {/* EXISTING COMPONENT — NOT REMOVED */}
+
+                        <RepositoryUploader />
+
+                    </section>
+
+                </main>
+
+            </div>
+
+        </div>
+    );
+}
+
+
+export default Dashboard;

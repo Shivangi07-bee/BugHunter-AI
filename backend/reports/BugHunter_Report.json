@@ -1,0 +1,1501 @@
+{
+    "generated_at": "2026-08-11 12:44:06",
+    "repository": {
+        "project_name": "shopping_app",
+        "language": "Python",
+        "framework": "Unknown",
+        "entry_point": "app.py",
+        "requirements": true,
+        "package_json": false,
+        "docker": false,
+        "source_files": 3
+    },
+    "routes": [
+        {
+            "path": "/payment",
+            "method": "POST",
+            "handler": "payment",
+            "file": "app.py",
+            "authentication": true
+        }
+    ],
+    "endpoints": [
+        {
+            "path": "/payment",
+            "method": "POST",
+            "handler": "payment",
+            "file": "app.py",
+            "authentication": true,
+            "calls": [
+                "Payment",
+                "create_order",
+                "verify_payment",
+                "Order",
+                "post"
+            ],
+            "models": [
+                "Order",
+                "Payment"
+            ]
+        }
+    ],
+    "workflows": [
+        {
+            "workflow_name": "Payment Workflow",
+            "endpoint_count": 1,
+            "endpoints": [
+                {
+                    "path": "/payment",
+                    "method": "POST",
+                    "handler": "payment",
+                    "models": [
+                        "Order",
+                        "Payment"
+                    ],
+                    "calls": [
+                        "Payment",
+                        "create_order",
+                        "verify_payment",
+                        "Order",
+                        "post"
+                    ],
+                    "authentication": true,
+                    "parameters": [],
+                    "inputs": [],
+                    "outputs": []
+                }
+            ],
+            "shared_models": [],
+            "shared_functions": [],
+            "models": [
+                "Order",
+                "Payment"
+            ],
+            "functions": [
+                "Order",
+                "Payment",
+                "create_order",
+                "post",
+                "verify_payment"
+            ],
+            "authentication_boundaries": [
+                {
+                    "path": "/payment",
+                    "method": "POST",
+                    "handler": "payment"
+                }
+            ],
+            "unauthenticated_endpoints": [],
+            "sensitive_models": [
+                "Order",
+                "Payment"
+            ],
+            "sensitive_endpoints": [
+                "/payment"
+            ],
+            "security_signals": {
+                "has_authentication_boundary": true,
+                "has_unauthenticated_endpoints": false,
+                "has_sensitive_models": true,
+                "has_sensitive_endpoints": true,
+                "endpoint_count": 1
+            }
+        }
+    ],
+    "knowledge_graph": {
+        "nodes": [
+            {
+                "id": "/payment",
+                "label": "/payment",
+                "type": "endpoint"
+            },
+            {
+                "id": "Order",
+                "label": "Order",
+                "type": "model"
+            },
+            {
+                "id": "Payment",
+                "label": "Payment",
+                "type": "model"
+            }
+        ],
+        "edges": [
+            {
+                "source": "/payment",
+                "relationship": "USES",
+                "target": "Order"
+            },
+            {
+                "source": "/payment",
+                "relationship": "USES",
+                "target": "Payment"
+            }
+        ]
+    },
+    "hypotheses": [
+        {
+            "title": "Financial Workflow Integrity Review",
+            "description": "/payment participates in a financial or transaction-related workflow.",
+            "reasoning": [
+                "Financial state transitions require strict server-side validation.",
+                "Review ownership, amount, state and authorization checks.",
+                "Compare preceding and following workflow steps for inconsistent validation."
+            ],
+            "evidence": [
+                "/payment"
+            ],
+            "risk": "Critical",
+            "confidence": 82,
+            "workflow_name": "Payment Workflow",
+            "endpoints": [
+                "/payment"
+            ],
+            "status": "Hypothesis",
+            "requires_validation": true,
+            "score": 93,
+            "priority": "Immediate",
+            "ranking_factors": [
+                "security boundary",
+                "sensitive application state",
+                "state-changing operation",
+                "workflow relationship"
+            ]
+        },
+        {
+            "title": "Sensitive Workflow Review",
+            "description": "Payment Workflow contains models associated with sensitive application state.",
+            "reasoning": [
+                "Sensitive models increase the impact of authorization failures.",
+                "Review ownership and state transitions across the workflow.",
+                "Trace how these models move between endpoints."
+            ],
+            "evidence": [
+                "Order",
+                "Payment"
+            ],
+            "risk": "Critical",
+            "confidence": 75,
+            "workflow_name": "Payment Workflow",
+            "endpoints": [],
+            "status": "Hypothesis",
+            "requires_validation": true,
+            "score": 90,
+            "priority": "Immediate",
+            "ranking_factors": [
+                "security boundary",
+                "sensitive application state",
+                "state-changing operation",
+                "workflow relationship"
+            ]
+        },
+        {
+            "title": "State Transition Review",
+            "description": "/payment performs a state-changing operation.",
+            "reasoning": [
+                "The endpoint can modify application state.",
+                "State transitions should enforce authorization and business invariants.",
+                "Review whether client-controlled values can bypass expected state transitions."
+            ],
+            "evidence": [
+                "/payment"
+            ],
+            "risk": "Critical",
+            "confidence": 68,
+            "workflow_name": "Payment Workflow",
+            "endpoints": [
+                "/payment"
+            ],
+            "status": "Hypothesis",
+            "requires_validation": true,
+            "score": 86,
+            "priority": "Immediate",
+            "ranking_factors": [
+                "security boundary",
+                "sensitive application state",
+                "state-changing operation",
+                "client-controlled input"
+            ]
+        },
+        {
+            "title": "Sensitive Resource Authorization Review",
+            "description": "/payment handles a potentially sensitive application resource.",
+            "reasoning": [
+                "The endpoint name indicates a sensitive application operation.",
+                "Sensitive resources should enforce object-level authorization.",
+                "Review whether the requested resource is bound to the authenticated principal."
+            ],
+            "evidence": [
+                "/payment",
+                "payment",
+                "order"
+            ],
+            "risk": "High",
+            "confidence": 72,
+            "workflow_name": "Payment Workflow",
+            "endpoints": [
+                "/payment"
+            ],
+            "status": "Hypothesis",
+            "requires_validation": true,
+            "score": 70,
+            "priority": "High",
+            "ranking_factors": [
+                "security boundary",
+                "sensitive application state"
+            ]
+        },
+        {
+            "title": "Input Validation Review",
+            "description": "/payment accepts or processes client-controlled input.",
+            "reasoning": [
+                "Client input should be validated against server-side expectations.",
+                "Review type, range, format and business-rule validation.",
+                "Pay particular attention to fields affecting authorization or application state."
+            ],
+            "evidence": [
+                "/payment"
+            ],
+            "risk": "Medium",
+            "confidence": 70,
+            "workflow_name": "Payment Workflow",
+            "endpoints": [
+                "/payment"
+            ],
+            "status": "Hypothesis",
+            "requires_validation": true,
+            "score": 68,
+            "priority": "Normal",
+            "ranking_factors": [
+                "security boundary",
+                "sensitive application state",
+                "client-controlled input"
+            ]
+        },
+        {
+            "title": "Shared Logic Consistency Review",
+            "description": "/payment uses shared application logic.",
+            "reasoning": [
+                "Shared functions may implement security-sensitive behavior.",
+                "Review whether every caller applies equivalent validation.",
+                "Look for differences between privileged and unprivileged call paths."
+            ],
+            "evidence": [
+                "/payment",
+                "Payment",
+                "create_order",
+                "verify_payment",
+                "Order",
+                "post"
+            ],
+            "risk": "Medium",
+            "confidence": 64,
+            "workflow_name": "Payment Workflow",
+            "endpoints": [
+                "/payment"
+            ],
+            "status": "Hypothesis",
+            "requires_validation": true,
+            "score": 58,
+            "priority": "Normal",
+            "ranking_factors": [
+                "sensitive application state"
+            ]
+        }
+    ],
+    "risk": [
+        {
+            "title": "Financial Workflow Integrity Review",
+            "description": "/payment participates in a financial or transaction-related workflow.",
+            "reasoning": [
+                "Financial state transitions require strict server-side validation.",
+                "Review ownership, amount, state and authorization checks.",
+                "Compare preceding and following workflow steps for inconsistent validation."
+            ],
+            "evidence": [
+                "/payment"
+            ],
+            "risk": "Critical",
+            "confidence": 82,
+            "workflow_name": "Payment Workflow",
+            "endpoints": [
+                "/payment"
+            ],
+            "status": "Hypothesis",
+            "requires_validation": true,
+            "score": 93,
+            "priority": "Immediate",
+            "ranking_factors": [
+                "security boundary",
+                "sensitive application state",
+                "state-changing operation",
+                "workflow relationship"
+            ]
+        },
+        {
+            "title": "Sensitive Workflow Review",
+            "description": "Payment Workflow contains models associated with sensitive application state.",
+            "reasoning": [
+                "Sensitive models increase the impact of authorization failures.",
+                "Review ownership and state transitions across the workflow.",
+                "Trace how these models move between endpoints."
+            ],
+            "evidence": [
+                "Order",
+                "Payment"
+            ],
+            "risk": "Critical",
+            "confidence": 75,
+            "workflow_name": "Payment Workflow",
+            "endpoints": [],
+            "status": "Hypothesis",
+            "requires_validation": true,
+            "score": 90,
+            "priority": "Immediate",
+            "ranking_factors": [
+                "security boundary",
+                "sensitive application state",
+                "state-changing operation",
+                "workflow relationship"
+            ]
+        },
+        {
+            "title": "State Transition Review",
+            "description": "/payment performs a state-changing operation.",
+            "reasoning": [
+                "The endpoint can modify application state.",
+                "State transitions should enforce authorization and business invariants.",
+                "Review whether client-controlled values can bypass expected state transitions."
+            ],
+            "evidence": [
+                "/payment"
+            ],
+            "risk": "Critical",
+            "confidence": 68,
+            "workflow_name": "Payment Workflow",
+            "endpoints": [
+                "/payment"
+            ],
+            "status": "Hypothesis",
+            "requires_validation": true,
+            "score": 86,
+            "priority": "Immediate",
+            "ranking_factors": [
+                "security boundary",
+                "sensitive application state",
+                "state-changing operation",
+                "client-controlled input"
+            ]
+        },
+        {
+            "title": "Sensitive Resource Authorization Review",
+            "description": "/payment handles a potentially sensitive application resource.",
+            "reasoning": [
+                "The endpoint name indicates a sensitive application operation.",
+                "Sensitive resources should enforce object-level authorization.",
+                "Review whether the requested resource is bound to the authenticated principal."
+            ],
+            "evidence": [
+                "/payment",
+                "payment",
+                "order"
+            ],
+            "risk": "High",
+            "confidence": 72,
+            "workflow_name": "Payment Workflow",
+            "endpoints": [
+                "/payment"
+            ],
+            "status": "Hypothesis",
+            "requires_validation": true,
+            "score": 70,
+            "priority": "High",
+            "ranking_factors": [
+                "security boundary",
+                "sensitive application state"
+            ]
+        },
+        {
+            "title": "Input Validation Review",
+            "description": "/payment accepts or processes client-controlled input.",
+            "reasoning": [
+                "Client input should be validated against server-side expectations.",
+                "Review type, range, format and business-rule validation.",
+                "Pay particular attention to fields affecting authorization or application state."
+            ],
+            "evidence": [
+                "/payment"
+            ],
+            "risk": "Medium",
+            "confidence": 70,
+            "workflow_name": "Payment Workflow",
+            "endpoints": [
+                "/payment"
+            ],
+            "status": "Hypothesis",
+            "requires_validation": true,
+            "score": 68,
+            "priority": "Normal",
+            "ranking_factors": [
+                "security boundary",
+                "sensitive application state",
+                "client-controlled input"
+            ]
+        },
+        {
+            "title": "Shared Logic Consistency Review",
+            "description": "/payment uses shared application logic.",
+            "reasoning": [
+                "Shared functions may implement security-sensitive behavior.",
+                "Review whether every caller applies equivalent validation.",
+                "Look for differences between privileged and unprivileged call paths."
+            ],
+            "evidence": [
+                "/payment",
+                "Payment",
+                "create_order",
+                "verify_payment",
+                "Order",
+                "post"
+            ],
+            "risk": "Medium",
+            "confidence": 64,
+            "workflow_name": "Payment Workflow",
+            "endpoints": [
+                "/payment"
+            ],
+            "status": "Hypothesis",
+            "requires_validation": true,
+            "score": 58,
+            "priority": "Normal",
+            "ranking_factors": [
+                "sensitive application state"
+            ]
+        }
+    ],
+    "evidence": [
+        {
+            "title": "Financial Workflow Integrity Review",
+            "workflow_name": "Payment Workflow",
+            "risk": "Critical",
+            "score": 93,
+            "confidence": 82,
+            "description": "/payment participates in a financial or transaction-related workflow.",
+            "type": "Static Analysis",
+            "location": "/payment",
+            "endpoint_count": 1,
+            "endpoints": [
+                {
+                    "path": "/payment",
+                    "method": "POST",
+                    "handler": "payment",
+                    "models": [
+                        "Order",
+                        "Payment"
+                    ],
+                    "calls": [
+                        "Payment",
+                        "create_order",
+                        "verify_payment",
+                        "Order",
+                        "post"
+                    ],
+                    "authentication": true,
+                    "parameters": [],
+                    "inputs": [],
+                    "outputs": []
+                }
+            ],
+            "reasoning": [
+                "Financial state transitions require strict server-side validation.",
+                "Review ownership, amount, state and authorization checks.",
+                "Compare preceding and following workflow steps for inconsistent validation."
+            ],
+            "evidence": [
+                "/payment"
+            ]
+        },
+        {
+            "title": "Sensitive Workflow Review",
+            "workflow_name": "Payment Workflow",
+            "risk": "Critical",
+            "score": 90,
+            "confidence": 75,
+            "description": "Payment Workflow contains models associated with sensitive application state.",
+            "type": "Static Analysis",
+            "location": "/payment",
+            "endpoint_count": 1,
+            "endpoints": [
+                {
+                    "path": "/payment",
+                    "method": "POST",
+                    "handler": "payment",
+                    "models": [
+                        "Order",
+                        "Payment"
+                    ],
+                    "calls": [
+                        "Payment",
+                        "create_order",
+                        "verify_payment",
+                        "Order",
+                        "post"
+                    ],
+                    "authentication": true,
+                    "parameters": [],
+                    "inputs": [],
+                    "outputs": []
+                }
+            ],
+            "reasoning": [
+                "Sensitive models increase the impact of authorization failures.",
+                "Review ownership and state transitions across the workflow.",
+                "Trace how these models move between endpoints."
+            ],
+            "evidence": [
+                "Order",
+                "Payment"
+            ]
+        },
+        {
+            "title": "State Transition Review",
+            "workflow_name": "Payment Workflow",
+            "risk": "Critical",
+            "score": 86,
+            "confidence": 68,
+            "description": "/payment performs a state-changing operation.",
+            "type": "Static Analysis",
+            "location": "/payment",
+            "endpoint_count": 1,
+            "endpoints": [
+                {
+                    "path": "/payment",
+                    "method": "POST",
+                    "handler": "payment",
+                    "models": [
+                        "Order",
+                        "Payment"
+                    ],
+                    "calls": [
+                        "Payment",
+                        "create_order",
+                        "verify_payment",
+                        "Order",
+                        "post"
+                    ],
+                    "authentication": true,
+                    "parameters": [],
+                    "inputs": [],
+                    "outputs": []
+                }
+            ],
+            "reasoning": [
+                "The endpoint can modify application state.",
+                "State transitions should enforce authorization and business invariants.",
+                "Review whether client-controlled values can bypass expected state transitions."
+            ],
+            "evidence": [
+                "/payment"
+            ]
+        },
+        {
+            "title": "Sensitive Resource Authorization Review",
+            "workflow_name": "Payment Workflow",
+            "risk": "High",
+            "score": 70,
+            "confidence": 72,
+            "description": "/payment handles a potentially sensitive application resource.",
+            "type": "Static Analysis",
+            "location": "/payment",
+            "endpoint_count": 1,
+            "endpoints": [
+                {
+                    "path": "/payment",
+                    "method": "POST",
+                    "handler": "payment",
+                    "models": [
+                        "Order",
+                        "Payment"
+                    ],
+                    "calls": [
+                        "Payment",
+                        "create_order",
+                        "verify_payment",
+                        "Order",
+                        "post"
+                    ],
+                    "authentication": true,
+                    "parameters": [],
+                    "inputs": [],
+                    "outputs": []
+                }
+            ],
+            "reasoning": [
+                "The endpoint name indicates a sensitive application operation.",
+                "Sensitive resources should enforce object-level authorization.",
+                "Review whether the requested resource is bound to the authenticated principal."
+            ],
+            "evidence": [
+                "/payment",
+                "payment",
+                "order"
+            ]
+        },
+        {
+            "title": "Input Validation Review",
+            "workflow_name": "Payment Workflow",
+            "risk": "Medium",
+            "score": 68,
+            "confidence": 70,
+            "description": "/payment accepts or processes client-controlled input.",
+            "type": "Static Analysis",
+            "location": "/payment",
+            "endpoint_count": 1,
+            "endpoints": [
+                {
+                    "path": "/payment",
+                    "method": "POST",
+                    "handler": "payment",
+                    "models": [
+                        "Order",
+                        "Payment"
+                    ],
+                    "calls": [
+                        "Payment",
+                        "create_order",
+                        "verify_payment",
+                        "Order",
+                        "post"
+                    ],
+                    "authentication": true,
+                    "parameters": [],
+                    "inputs": [],
+                    "outputs": []
+                }
+            ],
+            "reasoning": [
+                "Client input should be validated against server-side expectations.",
+                "Review type, range, format and business-rule validation.",
+                "Pay particular attention to fields affecting authorization or application state."
+            ],
+            "evidence": [
+                "/payment"
+            ]
+        },
+        {
+            "title": "Shared Logic Consistency Review",
+            "workflow_name": "Payment Workflow",
+            "risk": "Medium",
+            "score": 58,
+            "confidence": 64,
+            "description": "/payment uses shared application logic.",
+            "type": "Static Analysis",
+            "location": "/payment",
+            "endpoint_count": 1,
+            "endpoints": [
+                {
+                    "path": "/payment",
+                    "method": "POST",
+                    "handler": "payment",
+                    "models": [
+                        "Order",
+                        "Payment"
+                    ],
+                    "calls": [
+                        "Payment",
+                        "create_order",
+                        "verify_payment",
+                        "Order",
+                        "post"
+                    ],
+                    "authentication": true,
+                    "parameters": [],
+                    "inputs": [],
+                    "outputs": []
+                }
+            ],
+            "reasoning": [
+                "Shared functions may implement security-sensitive behavior.",
+                "Review whether every caller applies equivalent validation.",
+                "Look for differences between privileged and unprivileged call paths."
+            ],
+            "evidence": [
+                "/payment",
+                "Payment",
+                "create_order",
+                "verify_payment",
+                "Order",
+                "post"
+            ]
+        },
+        {
+            "source": "runtime",
+            "strategy": "Authorization Assessment",
+            "step": 1,
+            "action": "Capture a baseline request for a resource owned by the authorized test account",
+            "status": 0,
+            "success": false,
+            "observations": []
+        },
+        {
+            "source": "runtime",
+            "strategy": "Authorization Assessment",
+            "step": 2,
+            "action": "Test access-control behavior using a second authorized test identity",
+            "status": 0,
+            "success": false,
+            "observations": []
+        },
+        {
+            "source": "runtime",
+            "strategy": "Authorization Assessment",
+            "step": 3,
+            "action": "Compare authorization decisions across related workflow endpoints",
+            "status": 0,
+            "success": false,
+            "observations": []
+        },
+        {
+            "source": "runtime",
+            "strategy": "Authorization Assessment",
+            "step": 1,
+            "action": "Capture a baseline request for a resource owned by the authorized test account",
+            "status": 0,
+            "success": false,
+            "observations": []
+        },
+        {
+            "source": "runtime",
+            "strategy": "Authorization Assessment",
+            "step": 2,
+            "action": "Test access-control behavior using a second authorized test identity",
+            "status": 0,
+            "success": false,
+            "observations": []
+        },
+        {
+            "source": "runtime",
+            "strategy": "Authorization Assessment",
+            "step": 3,
+            "action": "Compare authorization decisions across related workflow endpoints",
+            "status": 0,
+            "success": false,
+            "observations": []
+        },
+        {
+            "source": "runtime",
+            "strategy": "Authorization Assessment",
+            "step": 1,
+            "action": "Capture a baseline request for a resource owned by the authorized test account",
+            "status": 0,
+            "success": false,
+            "observations": []
+        },
+        {
+            "source": "runtime",
+            "strategy": "Authorization Assessment",
+            "step": 2,
+            "action": "Test access-control behavior using a second authorized test identity",
+            "status": 0,
+            "success": false,
+            "observations": []
+        },
+        {
+            "source": "runtime",
+            "strategy": "Authorization Assessment",
+            "step": 3,
+            "action": "Compare authorization decisions across related workflow endpoints",
+            "status": 0,
+            "success": false,
+            "observations": []
+        },
+        {
+            "source": "runtime",
+            "strategy": "Authorization Assessment",
+            "step": 1,
+            "action": "Capture a baseline request for a resource owned by the authorized test account",
+            "status": 0,
+            "success": false,
+            "observations": []
+        },
+        {
+            "source": "runtime",
+            "strategy": "Authorization Assessment",
+            "step": 2,
+            "action": "Test access-control behavior using a second authorized test identity",
+            "status": 0,
+            "success": false,
+            "observations": []
+        },
+        {
+            "source": "runtime",
+            "strategy": "Authorization Assessment",
+            "step": 3,
+            "action": "Compare authorization decisions across related workflow endpoints",
+            "status": 0,
+            "success": false,
+            "observations": []
+        },
+        {
+            "source": "runtime",
+            "strategy": "Authorization Assessment",
+            "step": 1,
+            "action": "Capture a baseline request for a resource owned by the authorized test account",
+            "status": 0,
+            "success": false,
+            "observations": []
+        },
+        {
+            "source": "runtime",
+            "strategy": "Authorization Assessment",
+            "step": 2,
+            "action": "Test access-control behavior using a second authorized test identity",
+            "status": 0,
+            "success": false,
+            "observations": []
+        },
+        {
+            "source": "runtime",
+            "strategy": "Authorization Assessment",
+            "step": 3,
+            "action": "Compare authorization decisions across related workflow endpoints",
+            "status": 0,
+            "success": false,
+            "observations": []
+        },
+        {
+            "source": "runtime",
+            "strategy": "Financial Workflow Assessment",
+            "step": 1,
+            "action": "Map the financial workflow and identify state transitions",
+            "status": 0,
+            "success": false,
+            "observations": []
+        },
+        {
+            "source": "runtime",
+            "strategy": "Financial Workflow Assessment",
+            "step": 2,
+            "action": "Review server-side validation of financial state changes",
+            "status": 0,
+            "success": false,
+            "observations": []
+        },
+        {
+            "source": "runtime",
+            "strategy": "Financial Workflow Assessment",
+            "step": 3,
+            "action": "Verify authorization and ownership at each financial transition",
+            "status": 0,
+            "success": false,
+            "observations": []
+        }
+    ],
+    "investigation_plan": [
+        "InvestigationTask(priority=1, title='Financial Workflow Integrity Review', reason='Risk: Critical. Factors: security boundary, sensitive application state, state-changing operation, workflow relationship.', status='Pending')",
+        "InvestigationTask(priority=2, title='Sensitive Workflow Review', reason='Risk: Critical. Factors: security boundary, sensitive application state, state-changing operation, workflow relationship.', status='Pending')",
+        "InvestigationTask(priority=3, title='State Transition Review', reason='Risk: Critical. Factors: security boundary, sensitive application state, state-changing operation, client-controlled input.', status='Pending')",
+        "InvestigationTask(priority=4, title='Sensitive Resource Authorization Review', reason='Risk: High. Factors: security boundary, sensitive application state.', status='Pending')",
+        "InvestigationTask(priority=5, title='Input Validation Review', reason='Risk: Medium. Factors: security boundary, sensitive application state, client-controlled input.', status='Pending')",
+        "InvestigationTask(priority=6, title='Shared Logic Consistency Review', reason='Risk: Medium. Factors: sensitive application state.', status='Pending')",
+        "InvestigationTask(priority=7, title='Review /payment \u2192 Order', reason='USES', status='Pending')",
+        "InvestigationTask(priority=8, title='Review /payment \u2192 Payment', reason='USES', status='Pending')",
+        "InvestigationTask(priority=9, title='Investigate Payment Workflow', reason='Business workflow reconstructed from related application endpoints.', status='Pending')"
+    ],
+    "attack_plans": [
+        {
+            "id": "b21fc0b8-228b-48e8-936d-b9b91466dea2",
+            "strategy_name": "Authorization Assessment",
+            "objective": "Verify object ownership and resource-level authorization.",
+            "priority": 95,
+            "attack_steps": [
+                {
+                    "id": "66165a68-5465-4277-b228-257e6aada24b",
+                    "step_number": 1,
+                    "action": "Capture a baseline request for a resource owned by the authorized test account",
+                    "request_template": {
+                        "method": "AUTO",
+                        "path": "<resource_endpoint>",
+                        "resource_id": "<authorized_test_resource>"
+                    },
+                    "expected_result": "Baseline request succeeds for the authorized resource.",
+                    "requires_human_review": true
+                },
+                {
+                    "id": "ee536a78-b962-45c9-b66b-6e00042ff83b",
+                    "step_number": 2,
+                    "action": "Test access-control behavior using a second authorized test identity",
+                    "request_template": {
+                        "resource_id": "<second_test_resource>",
+                        "identity": "<second_test_account>"
+                    },
+                    "expected_result": "Access should remain restricted to resources owned or explicitly authorized for the identity.",
+                    "requires_human_review": true
+                },
+                {
+                    "id": "f713bb68-c643-4853-8364-31ccea451c22",
+                    "step_number": 3,
+                    "action": "Compare authorization decisions across related workflow endpoints",
+                    "request_template": {
+                        "compare_related_endpoints": true
+                    },
+                    "expected_result": "Related endpoints should apply consistent ownership and authorization controls.",
+                    "requires_human_review": true
+                }
+            ],
+            "status": "PENDING_REVIEW"
+        },
+        {
+            "id": "0e285dab-78a2-46da-836c-7acba3dbe585",
+            "strategy_name": "Authorization Assessment",
+            "objective": "Verify object ownership and resource-level authorization.",
+            "priority": 95,
+            "attack_steps": [
+                {
+                    "id": "b2979433-8efa-47e3-aac0-c2471cab01a5",
+                    "step_number": 1,
+                    "action": "Capture a baseline request for a resource owned by the authorized test account",
+                    "request_template": {
+                        "method": "AUTO",
+                        "path": "<resource_endpoint>",
+                        "resource_id": "<authorized_test_resource>"
+                    },
+                    "expected_result": "Baseline request succeeds for the authorized resource.",
+                    "requires_human_review": true
+                },
+                {
+                    "id": "f263a8f2-e604-4383-bb1e-5edbfd9bbe60",
+                    "step_number": 2,
+                    "action": "Test access-control behavior using a second authorized test identity",
+                    "request_template": {
+                        "resource_id": "<second_test_resource>",
+                        "identity": "<second_test_account>"
+                    },
+                    "expected_result": "Access should remain restricted to resources owned or explicitly authorized for the identity.",
+                    "requires_human_review": true
+                },
+                {
+                    "id": "a3f4fda9-26f4-45be-83c9-5ace0df6f209",
+                    "step_number": 3,
+                    "action": "Compare authorization decisions across related workflow endpoints",
+                    "request_template": {
+                        "compare_related_endpoints": true
+                    },
+                    "expected_result": "Related endpoints should apply consistent ownership and authorization controls.",
+                    "requires_human_review": true
+                }
+            ],
+            "status": "PENDING_REVIEW"
+        },
+        {
+            "id": "065857bc-0464-4312-85c3-d53a344232be",
+            "strategy_name": "Authorization Assessment",
+            "objective": "Verify object ownership and resource-level authorization.",
+            "priority": 95,
+            "attack_steps": [
+                {
+                    "id": "577fc2d5-5a92-4a0e-bf36-6dc6d344c65a",
+                    "step_number": 1,
+                    "action": "Capture a baseline request for a resource owned by the authorized test account",
+                    "request_template": {
+                        "method": "AUTO",
+                        "path": "<resource_endpoint>",
+                        "resource_id": "<authorized_test_resource>"
+                    },
+                    "expected_result": "Baseline request succeeds for the authorized resource.",
+                    "requires_human_review": true
+                },
+                {
+                    "id": "05b6238b-c1d9-4086-9bf0-5e12f38cea5f",
+                    "step_number": 2,
+                    "action": "Test access-control behavior using a second authorized test identity",
+                    "request_template": {
+                        "resource_id": "<second_test_resource>",
+                        "identity": "<second_test_account>"
+                    },
+                    "expected_result": "Access should remain restricted to resources owned or explicitly authorized for the identity.",
+                    "requires_human_review": true
+                },
+                {
+                    "id": "e6b31b07-769e-4f4f-a2f9-c2834bf38f84",
+                    "step_number": 3,
+                    "action": "Compare authorization decisions across related workflow endpoints",
+                    "request_template": {
+                        "compare_related_endpoints": true
+                    },
+                    "expected_result": "Related endpoints should apply consistent ownership and authorization controls.",
+                    "requires_human_review": true
+                }
+            ],
+            "status": "PENDING_REVIEW"
+        },
+        {
+            "id": "485aafb9-72b4-49bc-b39a-9afe889ccc00",
+            "strategy_name": "Authorization Assessment",
+            "objective": "Verify object ownership and resource-level authorization.",
+            "priority": 95,
+            "attack_steps": [
+                {
+                    "id": "182e6937-4fdf-459f-bf83-b5e24cca9b32",
+                    "step_number": 1,
+                    "action": "Capture a baseline request for a resource owned by the authorized test account",
+                    "request_template": {
+                        "method": "AUTO",
+                        "path": "<resource_endpoint>",
+                        "resource_id": "<authorized_test_resource>"
+                    },
+                    "expected_result": "Baseline request succeeds for the authorized resource.",
+                    "requires_human_review": true
+                },
+                {
+                    "id": "f726e2bd-2117-4cfb-908d-d08ea7d79d11",
+                    "step_number": 2,
+                    "action": "Test access-control behavior using a second authorized test identity",
+                    "request_template": {
+                        "resource_id": "<second_test_resource>",
+                        "identity": "<second_test_account>"
+                    },
+                    "expected_result": "Access should remain restricted to resources owned or explicitly authorized for the identity.",
+                    "requires_human_review": true
+                },
+                {
+                    "id": "cb32e233-27a5-4d94-a6f5-fd4d20ecdedc",
+                    "step_number": 3,
+                    "action": "Compare authorization decisions across related workflow endpoints",
+                    "request_template": {
+                        "compare_related_endpoints": true
+                    },
+                    "expected_result": "Related endpoints should apply consistent ownership and authorization controls.",
+                    "requires_human_review": true
+                }
+            ],
+            "status": "PENDING_REVIEW"
+        },
+        {
+            "id": "3628e6d5-c124-4e43-9b32-d28b64984f75",
+            "strategy_name": "Authorization Assessment",
+            "objective": "Verify object ownership and resource-level authorization.",
+            "priority": 95,
+            "attack_steps": [
+                {
+                    "id": "865febb3-21bb-464a-afea-d0af820fb3f4",
+                    "step_number": 1,
+                    "action": "Capture a baseline request for a resource owned by the authorized test account",
+                    "request_template": {
+                        "method": "AUTO",
+                        "path": "<resource_endpoint>",
+                        "resource_id": "<authorized_test_resource>"
+                    },
+                    "expected_result": "Baseline request succeeds for the authorized resource.",
+                    "requires_human_review": true
+                },
+                {
+                    "id": "c3744076-1f11-4e95-9f85-0a7854a75c3b",
+                    "step_number": 2,
+                    "action": "Test access-control behavior using a second authorized test identity",
+                    "request_template": {
+                        "resource_id": "<second_test_resource>",
+                        "identity": "<second_test_account>"
+                    },
+                    "expected_result": "Access should remain restricted to resources owned or explicitly authorized for the identity.",
+                    "requires_human_review": true
+                },
+                {
+                    "id": "b848ecd7-8d79-46f2-9425-4be5561e59de",
+                    "step_number": 3,
+                    "action": "Compare authorization decisions across related workflow endpoints",
+                    "request_template": {
+                        "compare_related_endpoints": true
+                    },
+                    "expected_result": "Related endpoints should apply consistent ownership and authorization controls.",
+                    "requires_human_review": true
+                }
+            ],
+            "status": "PENDING_REVIEW"
+        },
+        {
+            "id": "6528ef5e-c552-4300-8c28-ccec19baf808",
+            "strategy_name": "Financial Workflow Assessment",
+            "objective": "Verify integrity and authorization across financial state transitions.",
+            "priority": 94,
+            "attack_steps": [
+                {
+                    "id": "e4909f6c-f275-42c8-bcc7-51faf82d6564",
+                    "step_number": 1,
+                    "action": "Map the financial workflow and identify state transitions",
+                    "request_template": {
+                        "workflow": "<financial_workflow>"
+                    },
+                    "expected_result": "Identify valid application states and transitions.",
+                    "requires_human_review": true
+                },
+                {
+                    "id": "b7627a68-4511-4eab-82a7-9de85fb63362",
+                    "step_number": 2,
+                    "action": "Review server-side validation of financial state changes",
+                    "request_template": {
+                        "endpoint": "<state_change_endpoint>"
+                    },
+                    "expected_result": "Sensitive state transitions should be validated server-side.",
+                    "requires_human_review": true
+                },
+                {
+                    "id": "75945816-c4a1-4649-a305-6d7dfbdddff3",
+                    "step_number": 3,
+                    "action": "Verify authorization and ownership at each financial transition",
+                    "request_template": {
+                        "identity": "<authorized_test_account>"
+                    },
+                    "expected_result": "Only authorized transitions should be accepted.",
+                    "requires_human_review": true
+                }
+            ],
+            "status": "PENDING_REVIEW"
+        }
+    ],
+    "runtime": [
+        {
+            "strategy": "Authorization Assessment",
+            "objective": "Verify object ownership and resource-level authorization.",
+            "steps": [
+                {
+                    "step_number": 1,
+                    "action": "Capture a baseline request for a resource owned by the authorized test account",
+                    "status": 0,
+                    "success": false,
+                    "observations": []
+                },
+                {
+                    "step_number": 2,
+                    "action": "Test access-control behavior using a second authorized test identity",
+                    "status": 0,
+                    "success": false,
+                    "observations": []
+                },
+                {
+                    "step_number": 3,
+                    "action": "Compare authorization decisions across related workflow endpoints",
+                    "status": 0,
+                    "success": false,
+                    "observations": []
+                }
+            ]
+        },
+        {
+            "strategy": "Authorization Assessment",
+            "objective": "Verify object ownership and resource-level authorization.",
+            "steps": [
+                {
+                    "step_number": 1,
+                    "action": "Capture a baseline request for a resource owned by the authorized test account",
+                    "status": 0,
+                    "success": false,
+                    "observations": []
+                },
+                {
+                    "step_number": 2,
+                    "action": "Test access-control behavior using a second authorized test identity",
+                    "status": 0,
+                    "success": false,
+                    "observations": []
+                },
+                {
+                    "step_number": 3,
+                    "action": "Compare authorization decisions across related workflow endpoints",
+                    "status": 0,
+                    "success": false,
+                    "observations": []
+                }
+            ]
+        },
+        {
+            "strategy": "Authorization Assessment",
+            "objective": "Verify object ownership and resource-level authorization.",
+            "steps": [
+                {
+                    "step_number": 1,
+                    "action": "Capture a baseline request for a resource owned by the authorized test account",
+                    "status": 0,
+                    "success": false,
+                    "observations": []
+                },
+                {
+                    "step_number": 2,
+                    "action": "Test access-control behavior using a second authorized test identity",
+                    "status": 0,
+                    "success": false,
+                    "observations": []
+                },
+                {
+                    "step_number": 3,
+                    "action": "Compare authorization decisions across related workflow endpoints",
+                    "status": 0,
+                    "success": false,
+                    "observations": []
+                }
+            ]
+        },
+        {
+            "strategy": "Authorization Assessment",
+            "objective": "Verify object ownership and resource-level authorization.",
+            "steps": [
+                {
+                    "step_number": 1,
+                    "action": "Capture a baseline request for a resource owned by the authorized test account",
+                    "status": 0,
+                    "success": false,
+                    "observations": []
+                },
+                {
+                    "step_number": 2,
+                    "action": "Test access-control behavior using a second authorized test identity",
+                    "status": 0,
+                    "success": false,
+                    "observations": []
+                },
+                {
+                    "step_number": 3,
+                    "action": "Compare authorization decisions across related workflow endpoints",
+                    "status": 0,
+                    "success": false,
+                    "observations": []
+                }
+            ]
+        },
+        {
+            "strategy": "Authorization Assessment",
+            "objective": "Verify object ownership and resource-level authorization.",
+            "steps": [
+                {
+                    "step_number": 1,
+                    "action": "Capture a baseline request for a resource owned by the authorized test account",
+                    "status": 0,
+                    "success": false,
+                    "observations": []
+                },
+                {
+                    "step_number": 2,
+                    "action": "Test access-control behavior using a second authorized test identity",
+                    "status": 0,
+                    "success": false,
+                    "observations": []
+                },
+                {
+                    "step_number": 3,
+                    "action": "Compare authorization decisions across related workflow endpoints",
+                    "status": 0,
+                    "success": false,
+                    "observations": []
+                }
+            ]
+        },
+        {
+            "strategy": "Financial Workflow Assessment",
+            "objective": "Verify integrity and authorization across financial state transitions.",
+            "steps": [
+                {
+                    "step_number": 1,
+                    "action": "Map the financial workflow and identify state transitions",
+                    "status": 0,
+                    "success": false,
+                    "observations": []
+                },
+                {
+                    "step_number": 2,
+                    "action": "Review server-side validation of financial state changes",
+                    "status": 0,
+                    "success": false,
+                    "observations": []
+                },
+                {
+                    "step_number": 3,
+                    "action": "Verify authorization and ownership at each financial transition",
+                    "status": 0,
+                    "success": false,
+                    "observations": []
+                }
+            ]
+        }
+    ],
+    "findings": [
+        {
+            "id": "finding-1",
+            "title": "Authorization Assessment",
+            "description": "A structured validation path exists, but runtime evidence is still required.",
+            "workflow": "Application workflow",
+            "risk": 0.0,
+            "confidence": 70.0,
+            "decision": "ESCALATE",
+            "evidence": [
+                "3 validation steps prepared.",
+                "Validation plan requires runtime evidence before a security conclusion can be reached."
+            ],
+            "reasoning": [
+                "User or account resources require ownership validation.",
+                "Related endpoints may expose inconsistent authorization boundaries."
+            ],
+            "endpoints": [],
+            "severity": "INFORMATIONAL",
+            "source": "BugHunter AI Reasoning Engine",
+            "next_steps": [
+                "Execute approved validation steps",
+                "Collect runtime responses",
+                "Record evidence",
+                "Re-evaluate the hypothesis"
+            ],
+            "runtime_outcome": "Runtime evidence is available. Review the evidence and determine whether the hypothesis warrants escalation.",
+            "runtime_confidence": 75.0,
+            "runtime_validated": true
+        },
+        {
+            "id": "finding-2",
+            "title": "Authorization Assessment",
+            "description": "A structured validation path exists, but runtime evidence is still required.",
+            "workflow": "Application workflow",
+            "risk": 0.0,
+            "confidence": 70.0,
+            "decision": "ESCALATE",
+            "evidence": [
+                "3 validation steps prepared.",
+                "Validation plan requires runtime evidence before a security conclusion can be reached.",
+                "1 previous reflection record(s) available."
+            ],
+            "reasoning": [
+                "User or account resources require ownership validation.",
+                "Related endpoints may expose inconsistent authorization boundaries."
+            ],
+            "endpoints": [],
+            "severity": "INFORMATIONAL",
+            "source": "BugHunter AI Reasoning Engine",
+            "next_steps": [
+                "Execute approved validation steps",
+                "Collect runtime responses",
+                "Record evidence",
+                "Re-evaluate the hypothesis"
+            ],
+            "runtime_outcome": "Runtime evidence is available. Review the evidence and determine whether the hypothesis warrants escalation.",
+            "runtime_confidence": 75.0,
+            "runtime_validated": true
+        },
+        {
+            "id": "finding-3",
+            "title": "Authorization Assessment",
+            "description": "A structured validation path exists, but runtime evidence is still required.",
+            "workflow": "Application workflow",
+            "risk": 0.0,
+            "confidence": 70.0,
+            "decision": "ESCALATE",
+            "evidence": [
+                "3 validation steps prepared.",
+                "Validation plan requires runtime evidence before a security conclusion can be reached.",
+                "2 previous reflection record(s) available."
+            ],
+            "reasoning": [
+                "User or account resources require ownership validation.",
+                "Related endpoints may expose inconsistent authorization boundaries."
+            ],
+            "endpoints": [],
+            "severity": "INFORMATIONAL",
+            "source": "BugHunter AI Reasoning Engine",
+            "next_steps": [
+                "Execute approved validation steps",
+                "Collect runtime responses",
+                "Record evidence",
+                "Re-evaluate the hypothesis"
+            ],
+            "runtime_outcome": "Runtime evidence is available. Review the evidence and determine whether the hypothesis warrants escalation.",
+            "runtime_confidence": 75.0,
+            "runtime_validated": true
+        },
+        {
+            "id": "finding-4",
+            "title": "Authorization Assessment",
+            "description": "A structured validation path exists, but runtime evidence is still required.",
+            "workflow": "Application workflow",
+            "risk": 0.0,
+            "confidence": 70.0,
+            "decision": "ESCALATE",
+            "evidence": [
+                "3 validation steps prepared.",
+                "Validation plan requires runtime evidence before a security conclusion can be reached.",
+                "3 previous reflection record(s) available."
+            ],
+            "reasoning": [
+                "User or account resources require ownership validation.",
+                "Related endpoints may expose inconsistent authorization boundaries."
+            ],
+            "endpoints": [],
+            "severity": "INFORMATIONAL",
+            "source": "BugHunter AI Reasoning Engine",
+            "next_steps": [
+                "Execute approved validation steps",
+                "Collect runtime responses",
+                "Record evidence",
+                "Re-evaluate the hypothesis"
+            ],
+            "runtime_outcome": "Runtime evidence is available. Review the evidence and determine whether the hypothesis warrants escalation.",
+            "runtime_confidence": 75.0,
+            "runtime_validated": true
+        },
+        {
+            "id": "finding-5",
+            "title": "Authorization Assessment",
+            "description": "A structured validation path exists, but runtime evidence is still required.",
+            "workflow": "Application workflow",
+            "risk": 0.0,
+            "confidence": 70.0,
+            "decision": "ESCALATE",
+            "evidence": [
+                "3 validation steps prepared.",
+                "Validation plan requires runtime evidence before a security conclusion can be reached.",
+                "4 previous reflection record(s) available."
+            ],
+            "reasoning": [
+                "User or account resources require ownership validation.",
+                "Related endpoints may expose inconsistent authorization boundaries."
+            ],
+            "endpoints": [],
+            "severity": "INFORMATIONAL",
+            "source": "BugHunter AI Reasoning Engine",
+            "next_steps": [
+                "Execute approved validation steps",
+                "Collect runtime responses",
+                "Record evidence",
+                "Re-evaluate the hypothesis"
+            ],
+            "runtime_outcome": "Runtime evidence is available. Review the evidence and determine whether the hypothesis warrants escalation.",
+            "runtime_confidence": 75.0,
+            "runtime_validated": true
+        },
+        {
+            "id": "finding-6",
+            "title": "Financial Workflow Assessment",
+            "description": "A structured validation path exists, but runtime evidence is still required.",
+            "workflow": "Application workflow",
+            "risk": 0.0,
+            "confidence": 70.0,
+            "decision": "ESCALATE",
+            "evidence": [
+                "3 validation steps prepared.",
+                "Validation plan requires runtime evidence before a security conclusion can be reached.",
+                "5 previous reflection record(s) available."
+            ],
+            "reasoning": [
+                "Financial operations represent high-impact application state.",
+                "State changes should be validated server-side."
+            ],
+            "endpoints": [],
+            "severity": "INFORMATIONAL",
+            "source": "BugHunter AI Reasoning Engine",
+            "next_steps": [
+                "Execute approved validation steps",
+                "Collect runtime responses",
+                "Record evidence",
+                "Re-evaluate the hypothesis"
+            ],
+            "runtime_outcome": "Runtime evidence is available. Review the evidence and determine whether the hypothesis warrants escalation.",
+            "runtime_confidence": 75.0,
+            "runtime_validated": true
+        }
+    ]
+}

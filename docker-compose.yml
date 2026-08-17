@@ -1,0 +1,31 @@
+services:
+
+  backend:
+    build: ./backend
+    container_name: bughunter-backend
+
+    ports:
+      - "8000:8000"
+
+    volumes:
+      - ./backend:/app
+      - ./sample_projects:/sample_projects:ro
+      - ./:/workspace
+
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    container_name: bughunter-frontend
+
+    ports:
+      - "5173:5173"
+
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+    depends_on:
+      - backend
+
+    restart: unless-stopped
